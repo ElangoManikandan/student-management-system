@@ -1,17 +1,34 @@
 package com.sms.model;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data                   // generates getters, setters, equals, hashCode, toString
-@NoArgsConstructor      // generates no-arg constructor
-@AllArgsConstructor     // generates all-args constructor
+@Entity                          // marks this class as a JPA entity
+@Table(name = "students")        // maps to 'students' table in MySQL
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Student {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    // IDENTITY → MySQL AUTO_INCREMENT; DB assigns the ID on INSERT
     private Long id;
+
+    @Column(nullable = false)
     private String name;
+
     private int age;
+
+    @Column(unique = true, nullable = false)
     private String email;
+
     private String department;
 }

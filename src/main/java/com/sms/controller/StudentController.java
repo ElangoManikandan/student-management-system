@@ -2,6 +2,7 @@ package com.sms.controller;
 
 import com.sms.dto.StudentRequestDTO;
 import com.sms.dto.StudentResponseDTO;
+import com.sms.service.CourseService;
 import com.sms.service.StudentService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
@@ -18,9 +19,11 @@ import java.util.List;
 public class StudentController {
 
     private final StudentService studentService;
+    private final CourseService courseService;
 
-    public StudentController(StudentService studentService) {
+    public StudentController(StudentService studentService, CourseService courseService) {
         this.studentService = studentService;
+        this.courseService = courseService;
     }
 
     @GetMapping
@@ -59,4 +62,20 @@ public class StudentController {
         studentService.deleteStudent(id);
         return ResponseEntity.noContent().build();
     }
+
+    // ADD this method inside the existing StudentController class
+// (below the existing deleteStudent method)
+
+    // T6: POST /api/students/{studentId}/enroll/{courseId}  →  200 OK
+    @PostMapping("/{studentId}/enroll/{courseId}")
+    public ResponseEntity<String> enrollStudentInCourse(
+            @PathVariable Long studentId,
+            @PathVariable Long courseId) {
+        String result = courseService.enrollStudent(studentId, courseId);
+        return ResponseEntity.ok(result);
+    }
+
+// Also inject CourseService in the constructor:
+// private final CourseService courseService;
+// Add courseService as a constructor parameter alongside studentService
 }

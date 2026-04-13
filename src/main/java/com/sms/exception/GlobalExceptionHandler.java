@@ -12,10 +12,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@RestControllerAdvice   // applies to all @RestController classes
+@RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    // ── Handles StudentNotFoundException → 404 ──────────────────────
     @ExceptionHandler(StudentNotFoundException.class)
     public ResponseEntity<ApiErrorResponse> handleStudentNotFound(
             StudentNotFoundException ex) {
@@ -29,7 +28,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 
-    // ── Handles @Valid failures → 400 with field-level errors ────────
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiErrorResponse> handleValidationErrors(
             MethodArgumentNotValidException ex) {
@@ -49,7 +48,6 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(error);
     }
 
-    // ── Catch-all for any other unexpected exception → 500 ───────────
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiErrorResponse> handleGenericError(Exception ex) {
 

@@ -10,8 +10,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity                          // marks this class as a JPA entity
-@Table(name = "students")        // maps to 'students' table in MySQL
+@Entity
+@Table(name = "students")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -19,7 +19,6 @@ public class Student {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    // IDENTITY → MySQL AUTO_INCREMENT; DB assigns the ID on INSERT
     private Long id;
 
     @Column(nullable = false)

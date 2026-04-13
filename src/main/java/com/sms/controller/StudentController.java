@@ -1,7 +1,12 @@
 package com.sms.controller;
 
-import com.sms.model.Student;
+import com.sms.dto.StudentRequestDTO;
+import com.sms.dto.StudentResponseDTO;
 import com.sms.service.StudentService;
+import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,40 +23,35 @@ public class StudentController {
         this.studentService = studentService;
     }
 
-
     @GetMapping
-    public ResponseEntity<List<Student>> getAllStudents() {
-        List<Student> students = studentService.getAllStudents();
-        return ResponseEntity.ok(students);
+    public ResponseEntity<List<StudentResponseDTO>> getAllStudents() {
+        return ResponseEntity.ok(studentService.getAllStudents());
+    }
+
+    @GetMapping("/paged")
+    public ResponseEntity<Page<StudentResponseDTO>> getAllStudentsPaged(
+            Pageable pageable) {
+        return ResponseEntity.ok(studentService.getAllStudentsPaged(pageable));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Student> getStudentById(@PathVariable Long id) {
-        try {
-            Student student = studentService.getStudentById(id);
-            return ResponseEntity.ok(student);
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<StudentResponseDTO> getStudentById(
+            @PathVariable Long id) {
+        return ResponseEntity.ok(studentService.getStudentById(id));
     }
 
     @PostMapping
-    public ResponseEntity<Student> createStudent(@RequestBody Student student) {
-        Student saved = studentService.addStudent(student);
-        return ResponseEntity.status(HttpStatus.CREATED).body(saved);  // 201
+    public ResponseEntity<StudentResponseDTO> createStudent(
+            @Valid @RequestBody StudentRequestDTO dto) {
+        StudentResponseDTO saved = studentService.addStudent(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }
 
-
     @PutMapping("/{id}")
-    public ResponseEntity<Student> updateStudent(
+    public ResponseEntity<StudentResponseDTO> updateStudent(
             @PathVariable Long id,
-            @RequestBody Student student) {
-        try {
-            Student updated = studentService.updateStudent(id, student);
-            return ResponseEntity.ok(updated);
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
+            @Valid @RequestBody StudentRequestDTO dto) {
+        return ResponseEntity.ok(studentService.updateStudent(id, dto));
     }
 
     @DeleteMapping("/{id}")
